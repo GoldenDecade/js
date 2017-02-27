@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //Object.create(proto, [ propertiesObject ])  创建一个拥有指定原型和若干个指定属性的对象
+    //proto 一个对象，作为新创建对象的原型。 如果 proto 参数不是 null 或一个对象值，则抛出一个 TypeError 异常。
+
+
+    //创建一个以另一个空对象为原型，且拥有一个属性为p的对象
+    var o = Object.create({}, {p: {value:42}})
+    console.log(o.p);//42
+    o.p = 24;
+    console.log(o.p);//42  省略了的属性特性默认为false，所以属性p是不可写，不可枚举，不可配置的
+    o.q = 12
+    for (var prop in o) {
+        console.log(prop)
+    }//"q"
+
+    console.log(delete o.p);  //false
+    //创建一个可写的  可枚举的  可配置的属性p
+    var o1 = Object.create({}, {p: {value: 43, writable:true, enumerable: true,configurable:true}})
+    console.log(o1.constructor);
+    console.log(o1.p);
+    o1.p = 34;
+    console.log(o1.p);
+
+    function S(){
+        this.x = 4;
+    }
+    S.prototype.add = function() {
+        return 'add'
+    }
+    //创建一个obj1对象，它的原型为S.prototype,属性为p
+    var obj1 = Object.create(S.prototype,{p: {value: 45, writable:true, enumerable: true,configurable:true}})
+    /*obj1.constructor = {}
+    console.log(obj1.add(),obj1.constructor);//add    function Object() { [native code] }*/
+    console.log(obj1.add(),obj1.constructor);//add    function S(){this.x = 4;}
+</script>
+</body>
+</html>

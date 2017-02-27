@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+//prototypeObj.isPrototypeOf(object) 方法用于测试一个对象prototypeObj是否存在于另一个对象object的原型链上。
+    //object :  在该对象的原型链上搜寻
+    //返回值：  布尔值
+//var fum = new Fum();
+//console.log(Fi.prototype.isPrototypeOf(fum));
+
+/*function F1(){
+
+}
+function F2() {
+
+}
+F2.prototype = new F1()
+var f2 = new F2()
+var f1 = new F1()
+console.log(f1.isPrototypeOf(f2));//false
+console.log(F1.prototype.isPrototypeOf(f2));//true*/
+//所以只能用F1.prototype.isPrototypeOf(f2) 这种格式来写
+
+//与instanceof 进行对比
+//object instanceof constructor  运算符用来测试一个对象在其原型链中是否存在一个构造函数constructor的prototype属性
+// 定义构造函数
+function C(){}
+function D(){}
+
+var o = new C();
+
+// true，因为 Object.getPrototypeOf(o) === C.prototype
+o instanceof C;
+
+// false，因为 D.prototype不在o的原型链上
+o instanceof D;
+
+o instanceof Object; // true,因为Object.prototype.isPrototypeOf(o)返回true
+C.prototype instanceof Object // true,同上
+
+C.prototype = {};
+var o2 = new C();
+
+o2 instanceof C; // true
+
+o instanceof C; // false,C.prototype指向了一个空对象,这个空对象不在o的原型链上.
+
+D.prototype = new C(); // 继承
+var o3 = new D();
+o3 instanceof D; // true
+o3 instanceof C; // true
+
+    //instanceof和多全局对象(多个frame或多个window之间的交互)
+//Array.isArray(myObj)
+//Object.prototype.toString.call(myObj) === "[object Array]"来判断myObj是否是数组
+</script>
+</body>
+</html>

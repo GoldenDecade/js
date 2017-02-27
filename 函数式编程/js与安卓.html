@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+//得到WebSettings对象
+WebSettings seting = webView.getSettings();
+//设置支持打开新窗口，没有它onCreateWindow永远不会被调用
+webView.getSettings().setSupportMultipleWindows(true);
+//设置支持执行js脚本
+seting.setJavaScriptEnabled(true);
+//设置加载进来的页面自适应手机屏幕
+//1.设置webview推荐使用的窗口
+seting.setUseWideViewPort(true);
+//2.设置webview加载的页面的模式
+seting.setLoadWithOverviewMode(true);
+//提高渲染等级
+seting.setRenderPriority(WebSettings.RenderPriority.HIGH);
+//启用数据库
+seting.setDatabaseEnabled(true);
+//设置可以使用localStorage
+seting.setDomStorageEnabled(true);
+//启用地理定位
+seting.setGeolocationEnabled(true);
+//离线缓存
+//1.应用可以有缓存
+seting.setAppCacheEnabled(true);
+//2.缓存最多可以有8M
+seting.setAppCacheMaxSize(1024*1024*8);
+//3.缓存位置
+String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
+seting.setAppCachePath(appCachePath);
+//设置可以访问文件
+seting.setAllowFileAccess(true);
+
+
+
+
+
+package com.example.h5test;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+@SuppressLint("JavascriptInterface")
+public class MainActivity extends Activity{
+private int local_page=0;
+private WebView webView;
+private WebView newWebView;
+private LinearLayout ll;
+private String localPage;
+
+
+@Override  //onCreate程序的入口，
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
+setContentView(R.layout.activity_main);
+webView=(WebView)findViewById(R.id.webView);
+
+ll = (LinearLayout)findViewById(R.id.lyout);
+
+//使webview支持js的一些事件，有些在这里没用上
+WebSettings seting = webView.getSettings();
+webView.getSettings().setSupportMultipleWindows(true); //不写这句onCreateWindow不会执行
+seting.setJavaScriptEnabled(true);
+seting.setUseWideViewPort(true);
+seting.setLoadWithOverviewMode(true);
+seting.setRenderPriority(WebSettings.RenderPriority.HIGH);
+seting.setDatabaseEnabled(true);
+seting.setDomStorageEnabled(true);
+seting.setGeolocationEnabled(true);
+seting.setAppCacheMaxSize(1024*1024*8);
+String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
+seting.setAppCachePath(appCachePath);
+seting.setAllowFileAccess(true);
+seting.setAppCacheEnabled(true);
+webView.addJavascriptInterface(new DemoJavaScriptInterface(), "demo");
+
+webView.setWebViewClient(new WebViewClient(){
+@Override
+public boolean shouldOverrideUrlLoading(WebView view, String url) {
+Toast.makeText(getApplicationContext(), "shouldOverrideUrlLoading", Toast.LENGTH_SHORT).show();
+view.loadUrl(url);
+return true;  //这里返回true表示h5里的链接在webview里跳转
+}
+
+@Override
+public void onPageFinished(WebView view, String url) {
+super.onPageFinished(view, url);
+// webView.loadUrl("javascript:function testapi(){TEST_WEB.finish();}$(\".jump-back-btn\").on(\"click\",function(){testapi();window.history.go(-1);return false;})");
+
+}
+
+@Override
+public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
+return super.shouldOverrideKeyEvent(view, event);
+}
+});
+
+webView.setWebChromeClient(new WebChromeClient() {
+// 处理alert事件
+public boolean onJsAlert(WebView view, String url, String message,
+final android.webkit.JsResult result) {
+AlertDialog.Builder b2 = new AlertDialog.Builder(
+MainActivity.this)
+.setTitle("Alert")
+.setMessage(message)
+.setPositiveButton("OK",
+new DialogInterface.OnClickListener() {
+
+@Override
+public void onClick(DialogInterface dialog,
+int which) {
+result.confirm();
+}
+});
+b2.setCancelable(false);
+b2.create();
+b2.show();
+result.confirm();
+return true;
+
+};
+@Override    //支持window.open
+public boolean onCreateWindow(WebView view, boolean isDialog,
+boolean isUserGesture, Message resultMsg) {
+Toast.makeText(getApplicationContext(), "onCreateWindow", Toast.LENGTH_SHORT).show();
+newWebView = new WebView(getApplicationContext());
+ll.addView(newWebView);
+WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+transport.setWebView(newWebView);
+resultMsg.sendToTarget();
+return true;
+};
+});
+
+String	murl = "file:///android_asset/v/index1.html";
+//String murl="http://club.lenovo.cn/home";
+init(murl);
+
+}
+
+//---------------------------------------------------
+private void getLocalStoragePage() {
+if (webView != null ) {
+//调用JS方法
+webView.loadUrl(
+"javascript:(function(){var localStorage = window.localStorage; window.demo.getPage(localStorage.getItem('page'));})()");
+}
+
+}
+
+//手机返回键事件
+@Override
+public void onBackPressed() {
+if (webView.canGoBack()){
+if(webView.getUrl().equals("file:///android_asset/v/index1.html")){
+//if(localPage.equals("2")){
+super.onBackPressed();
+}else{
+webView.goBack();
+}
+}else{
+super.onBackPressed();
+}
+}
+
+
+
+//与js交互的接口，
+final  class DemoJavaScriptInterface {
+DemoJavaScriptInterface() {
+}
+
+@JavascriptInterface
+public void showMainActivity() {   //返回安卓页面
+runOnUiThread(new Runnable() {
+@Override
+public void run() {
+//startActivity(new Intent(getApplicationContext(),MainActivity.class));
+Toast.makeText(getApplicationContext(), "showMainActivity", Toast.LENGTH_SHORT).show();
+}
+});
+}
+@JavascriptInterface
+public void local_page(final int page) {
+runOnUiThread(new Runnable() {
+@Override
+public void run() {
+// TODO Auto-generated method stub
+local_page=page;
+if(local_page==1){
+Toast.makeText(getApplicationContext(), "������ҳ��", Toast.LENGTH_SHORT).show();
+}
+else if(local_page==2){
+Toast.makeText(getApplicationContext(), "���ǵڶ���ҳ��", Toast.LENGTH_SHORT).show();
+init("javascript:goback()");
+}
+}
+});
+}
+@JavascriptInterface
+public void getPage(String nowPage){
+Log.d("WebViewFragment","######��ȡ��page : " + nowPage);
+localPage=nowPage;
+/* if(nowPage.equals("2")){
+init("javascript:(function(){history.back();})()");
+Toast.makeText(getApplicationContext(), "������һҳ", Toast.LENGTH_SHORT).show();
+
+}	 else{
+Toast.makeText(getApplicationContext(), nowPage, Toast.LENGTH_SHORT).show();
+}*/
+
+}
+
+@JavascriptInterface
+public void finish() {
+MainActivity.this.finish();
+}
+
+
+}
+
+public void init(String u) {
+//  加载路径
+webView.loadUrl(u);
+}
+
+
+
+}
+
+</body>
+</html>

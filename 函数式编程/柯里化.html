@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数柯里化</title>
+</head>
+<body>
+//函数的合成  f(x)和g(x)合成为f(g(x))有一个隐藏的前提，就是f和g都只能接受一个参数，
+//如果可以接受多个参数，比如f(x,y)和g(a,b,c) 函数合成就比较麻烦
+<b>此时就要函数柯里化--》就是把一个多参数的函数，转化为单参数函数</b>
+<script>
+    function add(x, y) {
+        return x + y
+    }
+    add(1, 2)
+    function addX(y) {
+        return function(x) {
+            return x + y
+        }
+    }
+    console.log(addX(2)(1));
+</script>
+</body>
+</html>

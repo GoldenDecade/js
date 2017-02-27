@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函子</title>
+</head>
+<body>
+<b>函子是函数式编程中最重要的数据类型，也是基本的运算单位和功能单位</b>
+函子首先是一种范畴，也就是说是一个容器，包含了值和变形关系。比较特殊的是，
+它的变性关系可以依次作用于每一个值，将当前容器变形成另一个容器。
+//任何具有map方法的数据结构，都可以当做函子的实现
+<script>
+    class Functor {
+        constructor(val) {
+            this.val = val
+        }
+        map(f) {    //f代表function
+            return new Functor(f(this.val))
+        }
+    }
+    //一般约定，函子的标志就是容器具有map方法，将容器里面的每一个值，
+    // 映射到另一个容器
+    /*new Functor(4).map(function(two) {
+        console.log(two + 2);   //6
+    })
+    Functor(4)*/
+    new Functor('flowers').map(function(s) {
+        console.log(s.toUpperCase());
+    })
+//Functor是一个函子，它的map方法接受函数f作为参数，返回一个新的函子，
+    // 里面包含的值是被f处理过得（f(this.val)）
+
+    //函数式编程里面的运算，都是通过函子完成，即原酸不直接针对值，而是针对这个值得容器--函子
+    //函子本身具有对外接口（map方法），各种函数就是运算符，通过接口接入容器，引发容器里面的值得变形。
+    //函数式编程就是运用不同的函子，解决实际问题
+
+//of方法  函数式编程一般约定，函子有一个of方法，用来生成新的容器
+    Functor.of = function(val) {
+        return new Functor(val);
+    }
+    /*Functor.of(2).map(function(f) {   //f代表前面的值  this.val
+        console.log((f + 10));
+    })*/
+
+    // Maybe函子  函子接受各种函数，处理容器内部的值。这里就有一个问题，容器内部的值可能是一个空值（比如null），
+    // 而外部函数未必有处理空值的机制，如果传入空值，很可能就会出错。
+    /*Functor.of(null).map(function(s) {
+        return s.toUpperCase()
+    })  //TypeError*/
+
+    //Maybe函子  相当于在map方法中设置了空值检查
+    class Maybe extends Functor {
+        map(f) {
+            return this.val ? Maybe.of(this.val) : Maybe.of(null);
+        }
+    }
+    Maybe.of = function(val) {
+        return new Maybe(val)
+    }
+    Maybe.of(null).map(function(s) {
+        return s.toUpperCase()
+    })//此时传入null的话，就不会报错
+
+    // Either 函子  如果为空就选默认值
+    class Either {
+        constructor(left, right) {
+            this.left = left;
+            this.right = right;
+        }
+        map(f) {
+            return this.right ?
+                    Either.of(this.left, f(this.right)) :
+                    Either.of(f(this.left), this.right)
+        }
+    }
+    Either.of = function(left, right) {
+        return new Either(left, right)
+    }
+    /*Either.of(5,6).map(function(s) {
+        console.log(s + 1);
+    })
+    Either.of(5, undefined).map(function(s) {
+        console.log(s + 1);
+    })*/
+
+    //ap函子
+    //注意ap方法的参数不是函数，而是另一个函子
+    //ap函子的意义在于：对于那些多参数的函数，就可以从多个容器之中取值，
+    //实现函子的链式操作
+
+    class Ap extends Functor {
+
+        ap(F) {
+            return Ap.of(this.val(F.val))
+        }
+    }
+    Ap.of = function(val) {
+        return new Ap(val)
+    }
+    function add(x) {
+        return function(y) {
+            console.log(x + y);
+        }
+    }
+    Ap.of(add(2)).ap(Functor.of(4))
+    Ap.of(add).ap(Maybe.of(2)).ap(Maybe.of(3))
+    console.log(Either.of(Either.of(Either.of(3))));//是一个对象，而不是一个数字
+    Ap.of(add).ap(Maybe.of(2)).ap(Either.of(Either.of(Either.of(3))));
+    console.log(Maybe.of(Maybe.of(Maybe.of({name: "Mu", number: 8402}))));
+    // Monad函子
+    class Monad extends Functor {
+
+        join() {
+            console.log(this.val);
+        }
+        flatMap(f) {
+            return this.map(f).join()
+        }
+    }
+    Monad.of = function (val) {
+        return new Monad(val)
+    }
+    Monad.of(Maybe.of(Maybe.of(Maybe.of({name: "Mu", number: 8402}))))
+
+    //总结
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    nihao
+</div>
+<script>
+    //在开始标签之前
+    document.getElementById("app").insertAdjacentHTML('beforebegin', '<div id="two1" style="color:red;">beforebegin</div>')
+//    在开始标签之后
+    document.getElementById("app").insertAdjacentHTML('beforeend', '<div id="two2" style="color:blue">beforeend</div>')
+//    在结束标签之前
+    document.getElementById("app").insertAdjacentHTML('afterbegin', '<div id="two3" style="color:pink">afterbegin</div>')
+//    在结束标签之后
+    document.getElementById("app").insertAdjacentHTML('afterend', '<div id="two4" style="color:yellow">afterend</div>')
+</script>
+</body>
+</html>

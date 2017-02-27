@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //映射  设置映射和获取映射
+//    Map对象就是简单的键/值映射。其中键和值可以是任意值(对象或者原始值)。
+//Iterable 可以是一个数组或者其他 iterable 对象，其元素或为键值对，或为两个元素的数组。
+// 每个键值对都会添加到新的 Map。null 会被当做 undefined。
+var myMap = new Map();
+
+var keyObj = {},
+        keyFunc = function () {},
+        keyString = "a string";
+
+// 添加键
+myMap.set(keyString, "和键'a string'关联的值");
+myMap.set(keyObj, "和键keyObj关联的值");
+myMap.set(keyFunc, "和键keyFunc关联的值");
+
+myMap.size; // 3
+
+// 读取值
+myMap.get(keyString);    // "和键'a string'关联的值"
+myMap.get(keyObj);       // "和键keyObj关联的值"
+myMap.get(keyFunc);      // "和键keyFunc关联的值"
+
+myMap.get("a string");   // "和键'a string'关联的值"
+                         // 因为keyString === 'a string'
+myMap.get({});           // undefined, 因为keyObj !== {}
+myMap.get(function() {}) // undefined, 因为keyFunc !== function () {}
+
+//    将NaN作为映射的键
+    var myMap = new Map();
+    myMap.set(NaN, "not a number");
+
+    myMap.get(NaN); // "not a number"
+
+    var otherNaN = Number("foo");
+    myMap.get(otherNaN); // "not a number"
+
+//    映射与数组对象的关系
+   /* var kvArray = [["key1", "value1"], ["key2", "value2"]];
+
+    // 使用映射对象常规的构造函数将一个二维键值对数组对象转换成一个映射关系
+    var myMap = new Map(kvArray);
+
+    myMap.get("key1"); // 返回值为 "value1"*/
+
+</script>
+</body>
+</html>

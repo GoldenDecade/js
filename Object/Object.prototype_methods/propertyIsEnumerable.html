@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+//    obj.propertyIsEnumerable(prop) 返回一个布尔值，表明指定的属性名是否是当前对象可枚举的自身属性
+var o = {};
+var a = [];
+o.prop = 'is enumerable';
+a[0] = 'is enumerable';
+
+o.propertyIsEnumerable('prop');   //  返回 true
+a.propertyIsEnumerable(0);        // 返回 true
+
+用户自定义对象和引擎内置对象
+
+下面的例子演示了用户自定义对象和JS引擎内置对象上属性可枚举性的区别.
+        var a = ['is enumerable'];
+
+a.propertyIsEnumerable(0);          // 返回 true
+a.propertyIsEnumerable('length');   // 返回 false
+
+Math.propertyIsEnumerable('random');   // 返回 false
+this.propertyIsEnumerable('Math');     // 返回 false
+自身属性和继承属性     继承属性不可枚举（可以通过hasownProperty得出）
+
+
+</script>
+</body>
+</html>

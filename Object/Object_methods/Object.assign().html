@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //属性  Object.length   Object.prototype
+    //方法：
+    //Object.assign(target, ...sources)  通过复制一个或多个对象来创建一个新的对象
+    //target 目标对象   sources任意多个源对象
+    //Object.assign()只会拷贝源对象自身的并且可枚举的属性到目标对象身上。  浅拷贝
+    //注意， Object.assign 会跳过那些值为 null 或 undefined 的源对象。
+    /*var obj = {a:1,b:null}
+     var copy = Object.assign({}, obj)
+     console.log(copy);//{a:1,b:null}
+     console.log(copy.b);//null
+
+     var arr = [0,1,,3,4,,6,7,8]
+     var copyArr = Object.assign([], arr)
+     console.log(copyArr);//[0, 1, 3: 3, 4: 4, 6: 6, 7: 7, 8: 8]*/
+    //深度拷贝   使用了JSON.parse(JSON.stringify(obj))
+    //    let h = JSON.parse(JSON.stringify(a));
+
+</script>
+</body>
+</html>

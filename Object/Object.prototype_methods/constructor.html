@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //obj.constructor属性
+    //返回一个纸箱创建了该对象原型的函数引用，该属性的值是哪个函数本身，而不是一个包含函数名称的字符串
+    //所有对象都会从它的原型上继承一个constructor属性：
+    var o = new Object // 或者 o = {}
+    o.constructor == Object
+    var a = new Array  // 或者 a = []
+    a.constructor == Array
+    var n = new Number(3)
+    n.constructor == Number
+//    即使一些DOM对象并不是你用构造函数生成的，但你仍然可以将它们与对应的构造函数进行比较。比如：
+    document.constructor == Document;
+    document.form3.constructor == Form;
+
+
+
+</script>
+</body>
+</html>

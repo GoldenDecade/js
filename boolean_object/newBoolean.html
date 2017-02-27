@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //只要是new Boolean()无论传入什么参数，返回的实例对象的布尔值都是true
+    //但是传入为：false '' 0 NaN null undefined时，
+    var m = Boolean(false)
+    console.log(m);//false
+    var b = new Boolean(false);
+    document.write(b) //在页面上打印false，说明初始值为false
+    console.log(b, Boolean(b), Object.prototype.toString.call(b));//  true "[object Boolean]"
+    if(!b) {
+        var a = 10;
+    }
+    if(b) {
+        var c = 11;
+    }
+    console.log(a);//undefined
+    console.log(c);//11
+</script>
+</body>
+</html>

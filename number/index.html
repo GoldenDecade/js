@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    isNaN()
+    isFinite()//确定传递的值类型及本身是否是有限数
+    isInteger()//确定传递的值类型是number  且是整数
+    isSafeInteger()//number between -(253 - 1) and253 - 1
+    parseInt(string[, radix])  //Number.parseInt() 方法可以根据给定的进制数把一个字符串解析成整数。
+    parseFloat()
+
+    toFixed(digits)//小数点后数字的个数；介于 0 到 20 （包括）之间如果忽略该参数，则默认为 0。
+    toPrecision(precision)//以指定的精度返回该数值对象的字符串表示   precision指定有效数个数的整数
+    toExponential(fractionDigits) //方法以指数表示法返回该数值字符串表示形式。
+//    fractionDigits一个整数用来指定小数点后有几位数字，介于 0 和 20（包括20）
+    var numObj = 77.1234;
+    console.log(numObj.toExponential());//7.71234e+1   e指的是小数点位置
+
+</script>
+</body>
+</html>
